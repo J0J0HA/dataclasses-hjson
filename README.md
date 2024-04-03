@@ -1,6 +1,8 @@
 # dataclasses-hjson
 
-This package provides a simple way to serialize and deserialize dataclasses to and from Hjson, using ``dataclasses-json`` and ``hjson``.
+This package provides a simple way to serialize and deserialize dataclasses to and from Hjson.
+
+This uses ``dataclasses-json`` to serialize and deserialize dataclasses, and ``hjson`` to parse and generate Hjson.
 
 Opposed to ``dataclasses-json``, this package does only provide a mixin class to add the functionality to a dataclass, instead of a decorator. You can change the configuration of ``dataclasses-json`` by either using the ``using_config`` decorator or by manually setting the ``dataclasses_json_config`` attribute on the dataclass, using the ``hjson_config`` function.
 
