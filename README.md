@@ -2,7 +2,7 @@
 
 This package provides a simple way to serialize and deserialize dataclasses to and from Hjson, using ``dataclasses-json`` and ``hjson``.
 
-Opposed to ``dataclasses-json``, this package does only provide a mixin class to add the functionality to a dataclass, instead of a decorator. You can change the configuration of ``dataclasses-json`` by either using the ``with_config`` decorator or by manually setting the ``dataclasses_json_config`` attribute on the dataclass, using the ``hjson_config`` function.
+Opposed to ``dataclasses-json``, this package does only provide a mixin class to add the functionality to a dataclass, instead of a decorator. You can change the configuration of ``dataclasses-json`` by either using the ``using_config`` decorator or by manually setting the ``dataclasses_json_config`` attribute on the dataclass, using the ``hjson_config`` function.
 
 If you have any problems, ideas or suggestions, feel free to open an issue or a pull request!
 
@@ -14,18 +14,20 @@ pip install dataclasses-hjson
 
 ## Usage
 
-Example adding config using the ``with_config`` decorator:
+Example adding config using the ``using_config`` decorator:
 
 ```python
 from dataclasses import dataclass
 from dataclasses_json import Undefined, LetterCase
-from dataclasses_hjson import DataClassHjsonMixin, with_config
+from dataclasses_hjson import DataClassHjsonMixin, using_config
 
 
-@with_config(undefined=Undefined.EXCLUDE, letter_case=LetterCase.CAMEL) # (These are the default values)
+@using_config(
+    undefined=Undefined.EXCLUDE, letter_case=LetterCase.CAMEL
+)  # (These are the default values)
 @dataclass
 class Person(DataClassHjsonMixin):
-    name: str
+    first_name: str
     age: int
 
 ```
@@ -35,16 +37,15 @@ Alternatively, you can use the ``hjson_config`` function:
 ```python
 from dataclasses import dataclass
 from dataclasses_json import Undefined, LetterCase
-from dataclasses_hjson import DataclassHjsonMixin, hjson_config
+from dataclasses_hjson import DataClassHjsonMixin, hjson_config
 
 
 @dataclass
-class Person(DataclassHjsonMixin):
+class Person(DataClassHjsonMixin):
     dataclasses_json_config = hjson_config(undefined=Undefined.EXCLUDE, letter_case=LetterCase.CAMEL) # (These are the default values)
 
-    name: str
+    first_name: str
     age: int
-
 ```
 
 Adding the config is optional however!
@@ -52,13 +53,16 @@ Adding the config is optional however!
 Now you can serialize and deserialize the dataclass to and from Hjson:
 
 ```python
-person = Person(name='John Doe', age=30)
-
-# Serialize to Hjson
-hjson_str = person.to_hjson()
-
-# Deserialize from Hjson
-person = Person.from_hjson(hjson_str)
+person = Person(first_name="Guido", age=42)
+person_json = person.to_hjson()
+print(person_json)
+# {
+#   firstName: Guido
+#   age: 42
+# }
+person_copy = Person.from_hjson(person_json)
+print(person_copy)
+# Person(name='Guido', age=42)
 
 ```
 
